@@ -15,7 +15,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(
         name = "getAllTasks",
-        query = "SELECT m FROM Task AS m ORDER BY m.id DESC"
+        query = "SELECT t FROM Task AS t ORDER BY t.id DESC"
     )
 })
 @Table(name = "tasks")
@@ -24,6 +24,9 @@ public class Task {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @Column(name = "title", length = 100, nullable = false)
+    private String title;
 
     @Column(name = "created_at", nullable = false)
     private Timestamp created_at;
@@ -40,6 +43,14 @@ public class Task {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Timestamp getCreated_at() {
