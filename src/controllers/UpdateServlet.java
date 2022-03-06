@@ -17,13 +17,13 @@ import utils.DBUtil;
  * Servlet implementation class CreateServlet
  */
 @WebServlet("/create")
-public class CreateServlet extends HttpServlet {
+public class UpdateServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CreateServlet() {
+    public UpdateServlet() {
         super();
     }
 
@@ -37,9 +37,13 @@ public class CreateServlet extends HttpServlet {
             EntityManager em = DBUtil.createEntityManager();
             em.getTransaction().begin();
 
-         // インスタンスの生成
-            Task t = new Task();
-         
+         // 既にある物なのでインスタンス生成はいらない
+         // セッションスコープからメッセージのIDを取得して
+         // 該当のIDのメッセージ1件のみをデータベースから取得
+            //editページから飛んでいるので、task_idで取得
+            Task t = em.find(Task.class, (Integer)(request.getSession().getAttribute("task_id")));
+
+         // 各フィールドに上書きするコード
             String title = request.getParameter("title");
             t.setTitle(title);
 
@@ -47,13 +51,18 @@ public class CreateServlet extends HttpServlet {
             t.setContent(content);
 
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            t.setCreated_at(currentTime);
-            t.setUpdated_at(currentTime);
+            t.setUpdated_at(currentTime);       // 更新日時のみ上書き
 
-            em.persist(t);
+         // コミットすれば変更が反映されるので、永続化em.persist(t);は不要
+         // データベースを更新
+            em.getTransaction().begin();
             em.getTransaction().commit();
             em.close();
 
+         // セッションスコープ上の不要になったデータを削除
+            request.getSession().removeAttribute("task_id");
+
+         // indexページへリダイレクト
             response.sendRedirect(request.getContextPath() + "/index");
         }
     }
