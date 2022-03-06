@@ -14,9 +14,9 @@ import models.Task;
 import utils.DBUtil;
 
 /**
- * Servlet implementation class CreateServlet
+ * Servlet implementation class UpdateServlet
  */
-@WebServlet("/create")
+@WebServlet("/update")
 public class UpdateServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -35,7 +35,6 @@ public class UpdateServlet extends HttpServlet {
         //CSRF対策
         if(_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
-            em.getTransaction().begin();
 
          // 既にある物なのでインスタンス生成はいらない
          // セッションスコープからメッセージのIDを取得して

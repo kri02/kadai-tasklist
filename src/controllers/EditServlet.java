@@ -33,7 +33,6 @@ public class EditServlet extends HttpServlet {
         EntityManager em = DBUtil.createEntityManager();
 
         Task t = em.find(Task.class, Integer.parseInt(request.getParameter("id")));
-        response.getWriter().append("Served at: ").append(request.getContextPath());
 
         em.close();
 
@@ -44,7 +43,7 @@ public class EditServlet extends HttpServlet {
         //IDをセッションスコープに登録
         request.getSession().setAttribute("task_id", t.getId());
 
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/edit.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/edit.jsp");
         rd.forward(request, response);
 
     }
